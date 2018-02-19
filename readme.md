@@ -1,42 +1,51 @@
-Nette Sandbox
-=============
+Nette Blog Demo
+===============
 
-This is a simple pre-packaged and pre-configured application using the [Nette](https://nette.org)
-that you can use as the starting point for your new applications.
+Zadání:
+-------
 
-[Nette](https://nette.org) is a popular tool for PHP web development.
-It is designed to be the most usable and friendliest as possible. It focuses
-on security and performance and is definitely one of the safest PHP frameworks.
+Vytvořte jednoduchý systém pro blogování. Blog příspěvky bude moci přidávat pouze oprávněný uživatel, takže pro přidání příspěvku bude nutná autorizace. Autorizace se provede vůči tabulce uživatelů, kteří budou uloženi v databázi.
+
+Blok příspěvek bude mít název, anotaci, popis a obrázek. Vytvořte formulář, pomocí kterého bude možné tyto příspěvky vytvářet a plnit. Data uložte do databáze, obrázky případně na disk.
+
+Výstupem na homepage bude seznam příspěvků řazený dle nejnovějších prvně. Vypsány budou pouze nadpisy a anotace příspěvků. Výpis bude stránkovaný po 10 záznamech.
+
+Příspěvek z listu půjde rozkliknout do detailu, ve kterém se zobrazí název, anotace, popis a fotografie. V detailu bude drobečková navigace ve tvaru Úvod - Název stránky, klik na úvod mě proklikne zpět na homepage.
+
+Požadavky na zpracování:
+------------------------
+
+Celou aplikaci postavte pomocí Nette verze 2.4.
+Využijte správu závislostí pomocí Composer.
+Navrhněte datový model a implementujte jej pomocí Doctrine a rozšíření Kdyby pro Nette.
+List příspěvků zpracujte jako samostatnou Nette komponentu.
+Formulář zpracujte jako samostatnou Nette komponentu.
+Pro HTML kód a styly využijte frameworku Bootstrap, tzn. formuláře a vzhled budou alespoň trochu koukatelné :).
+Stránkování listu udělejte AJAXově pomocí redraw.
+Aplikaci zpracujte a umístěte na web nebo případně zašlete zazipovanou včetně databáze emailem.
+
+Instalace:
+----------
+Rozbalit archiv
+Spustit "composer install" pro stazeni zavislosti
+php ./www/index.php orm:schema-tool:update --force
 
 
 Installation
 ------------
-
-The best way to install Web Project is using Composer. If you don't have Composer yet,
-download it following [the instructions](https://doc.nette.org/composer). Then use command:
-
-	composer create-project nette/sandbox path/to/install
-	cd path/to/install
-
-
-Make directories `temp/` and `log/` writable.
-
+```
+git clone https://github.com/knapovsky/nette-blog
+composer install
+mkdir temp log
+chmod 777 temp log
+php ./www/index.php orm:schema-tool:update --force
+```
 
 Web Server Setup
 ----------------
-
-The simplest way to get started is to start the built-in PHP server in the root directory of your project:
-
-	php -S localhost:8000 -t www
-
-Then visit `http://localhost:8000` in your browser to see the welcome page.
-
-For Apache or Nginx, setup a virtual host to point to the `www/` directory of the project and you
-should be ready to go.
-
-It is CRITICAL that whole `app/`, `log/` and `temp/` directories are not accessible directly
-via a web browser. See [security warning](https://nette.org/security-warning).
-
+```
+php -S localhost:8000 -t www
+```
 
 Requirements
 ------------

@@ -1,0 +1,101 @@
+<?php
+
+namespace App\Presenters;
+
+use Doctrine\DBAL\Exception\DatabaseObjectExistsException;
+use Doctrine\DBAL\Exception\DatabaseObjectNotFoundException;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Nette\Application\UI\Form;
+use Nette\Neon\Exception;
+use Nette\Security\AuthenticationException;
+use Nette\Security\IAuthenticator;
+use Nette\Utils\ArrayHash;
+use Nette\Security\User;
+use App\Model;
+
+class SignPresenter extends BasePresenter
+{
+    const PASSWORD_MIN_LENGTH = 7;
+
+    protected function createComponentSignInForm()
+    {
+        $form = new Form;
+        $form->addText('id', 'Uživatelské jméno:')
+            ->setRequired('Prosím vyplňte své uživatelské jméno');
+
+        $form->addPassword('password', 'Heslo:')
+            ->setRequired('Prosím vyplňte své heslo');
+
+        $form->addSubmit('send', 'Přihlásit');
+
+        $form->onSuccess[] = [$this, 'signInFormSucceeded'];
+        return $form;
+    }
+
+    public function signInFormSucceeded(Form $form, ArrayHash $values)
+    {
+        $daoUser = $this->EntityManager->getRepository(Model\User::getClassName());
+        $user = new Model\User();
+        $user = $daoUser->find($values->id);
+        if($user){
+            if(password_verify($values->password, $user->password)){
+                try {
+                    $this->getUser()->setExpiration('+60 minutes', TRUE);
+                    $this->getUser()->login($values->id, $values->password);
+                } catch (AuthenticationException $e) {
+                    $form->addError('Nesprávné přihlašovací jméno nebo heslo.');
+                }
+                $this->flashMessage('Byl jste přihlášen');
+                $this->redirect('Homepage:');
+            }
+            else {
+                $this->flashMessage('Nesprávné heslo');
+                $this->redirect('Sign:in');
+            }
+        } else {
+            $this->flashMessage('Uživatel ' . $values->id .' nenalezen.');
+            $this->redirect('Sign:in');
+        }
+
+    }
+
+    public function createComponentSignUpForm()
+    {
+        $form = new Form;
+        $form->addText('id', 'Uživatelské jméno')
+            ->setRequired();
+        $form->addPassword('password', 'Heslo')
+            ->setOption('description', sprintf('at least %d characters', self::PASSWORD_MIN_LENGTH))
+            ->setRequired('Please create a password.')
+            ->addRule($form::MIN_LENGTH, null, self::PASSWORD_MIN_LENGTH);
+        $form->addSubmit('send', 'Registrovat');
+
+        $form->onSuccess[] = [$this, 'signUpFormSucceeded'];
+        return $form;
+    }
+
+    public function signUpFormSucceeded(Form $form, ArrayHash $values)
+    {
+        $daoUser = $this->EntityManager->getRepository(Model\User::getClassName());
+
+        $user = new Model\User();
+        $user->addUser($values->id, $values->password);
+
+        try {
+            $daoUser->save($user);
+
+            // After saving new user
+            $this->flashMessage('Byl jste zaregistrován');
+            $this->redirect('Homepage:');
+        } catch (UniqueConstraintViolationException $e) {
+            $form->addError('Uživatel s daným uživatelským jménem již existuje.');
+        }
+    }
+
+    public function actionOut()
+    {
+        $this->getUser()->logout();
+        $this->flashMessage('Odhlášení bylo úspěšné.');
+        $this->redirect('Homepage:');
+    }
+}

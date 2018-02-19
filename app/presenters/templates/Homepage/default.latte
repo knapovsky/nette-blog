@@ -1,0 +1,13 @@
+{block topButton}
+    {if $user->loggedIn}
+		<a n:href="Post:add" class="btn btn-primary">Přidat článek</a>
+    {/if}
+{/block}
+
+{block content}
+
+{**    {control articleJumbo}
+    {control articleHighlight}  **}
+
+<h1 n:block="title">Výpis článků</h1>
+{control articleList}

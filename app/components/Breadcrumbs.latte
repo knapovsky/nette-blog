@@ -1,0 +1,18 @@
+{*
+ * BreadCrumb Template
+ *
+ * @author David Zadrazil <me@davidzadrazil.cz>
+ *}
+
+<ol class="breadcrumb">
+    <li n:foreach="$links as $link" {if !$link['link']}class="active"{/if}>
+        <i class="{$link['icon']}" n:if="$link['icon']"></i>
+        {if $link['link']}
+            <a href="{$link['link']}" title="{$link['title']}">{$link['title']}</a>
+        {else}
+            {$link['title']}
+        {/if}
+        <span n:if="!$iterator->isLast()">/</span>
+        <i class="icon-angle-right" n:if="!$iterator->isLast()"></i>
+    </li>
+</ol>

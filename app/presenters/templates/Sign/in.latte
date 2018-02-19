@@ -1,0 +1,12 @@
+{block content}
+<div class="signInForm-wrapper">
+    <div class="signInForm">
+        <h1 n:block=title>Přihlásit se</h1>
+
+
+        {import '../components/form.latte'}
+        {include form signInForm}
+
+        <p class="text-center"><a class="btn btn-success" n:href="up">Ješťe nemáte účet? Vytvořte ho!</a></p>
+    </div>
+</div>

@@ -1,0 +1,28 @@
+{block topButton}
+    <a n:href="Homepage:" class="btn btn-secondary">Zpět</a>
+    {if $user->loggedIn}
+        {if $user->id == $article->user->id}
+            <a n:href="Post:edit $article->id" class="btn btn-success">Upravit</a>
+            <a n:href="Post:delete $article->id" class="btn btn-danger">Smazat</a>
+        {/if}
+    {/if}
+{/block}
+
+{block content}
+
+    {control breadcrumbs}
+
+    <main role="main" class="container">
+        <div class="row">
+            <div class="col-md-12 blog-main">
+                <h1 n:block="title">
+                    {$article->title}
+                </h1>
+                <img src="{$basePath}/images/{$article->pictureURL}"/>
+                <h2>Perex</h2>
+                <p>{$article->perex}</p>
+                <h2>Text</h2>
+                <p>{$article->text}</p>
+            </div>
+        </div>
+    </main>

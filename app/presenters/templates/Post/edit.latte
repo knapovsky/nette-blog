@@ -1,0 +1,14 @@
+{block topButton}
+    {if $user->loggedIn}
+        <a n:href="Post:show $article->id" class="btn btn-secondary">Zpět</a>
+    {/if}
+{/block}
+
+{block content}
+    {control breadcrumbs}
+
+    <h1 n:block=title>Upravit článek</h1>
+
+    {** Custom rendering **}
+    {import '../components/form.latte'}
+    {include form articleEditForm}

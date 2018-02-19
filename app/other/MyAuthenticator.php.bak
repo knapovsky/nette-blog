@@ -1,0 +1,43 @@
+<?php
+
+
+namespace App;
+
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Query\Expr\Base;
+use Nette\DI\Container;
+use \Nette\Security as NS;
+use Nette;
+use Kdyby;
+
+class MyAuthenticator extends Base implements NS\IAuthenticator {
+
+    private $EntityManager;
+
+    public function __construct(EntityManager $EntityManager) {
+        $this->$EntityManager = $EntityManager;
+    }
+
+    public function authenticate(array $credentials) {
+        list($id, $password) = $credentials;
+
+        $daoUser = $this->EntityManager->getRepository(Model\User::getClassName());
+        $user = $daoUser->find($id);
+        if($user){
+            if(password_verify($password, $user->password)){
+                try {
+                    $this->getUser()->setExpiration('+60 minutes', TRUE);
+                    $this->getUser()->login($id, $password);
+                    return new \Nette\Security\Identity($id, []);
+                } catch (NS\AuthenticationException $e) {
+                    throw new NS\AuthenticationException("Špatné heslo", self::INVALID_CREDENTIAL);
+                }
+            }
+            else {
+                throw new \NS\AuthenticationException("Špatné heslo nebo jméno.", self::INVALID_CREDENTIAL);
+            }
+        } else {
+            throw new \NS\AuthenticationException("Špatné heslo nebo jméno.", self::INVALID_CREDENTIAL);
+        }
+    }
+}

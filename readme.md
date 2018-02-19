@@ -22,13 +22,6 @@ List příspěvků zpracujte jako samostatnou Nette komponentu.
 Formulář zpracujte jako samostatnou Nette komponentu.
 Pro HTML kód a styly využijte frameworku Bootstrap, tzn. formuláře a vzhled budou alespoň trochu koukatelné :).
 Stránkování listu udělejte AJAXově pomocí redraw.
-Aplikaci zpracujte a umístěte na web nebo případně zašlete zazipovanou včetně databáze emailem.
-
-Instalace:
-----------
-Rozbalit archiv
-Spustit "composer install" pro stazeni zavislosti
-php ./www/index.php orm:schema-tool:update --force
 
 
 Installation

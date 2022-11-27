@@ -22,9 +22,9 @@ services:
     router: App\RouterFactory::createRouter
 
 database:
-    dsn: 'mysql:host=127.0.0.1;dbname=doctrine_devel'
-    user: doctrine
-    password: dbpass42
+    dsn: 'mysql:host=127.0.0.1;dbname=nette'
+    user: nettesampleblog
+    password: 
 
 extensions:
     console: Kdyby\Console\DI\ConsoleExtension

@@ -1,2 +1,11 @@
 .DS_Store
 .listing
+.env
+.env.*
+*.sql
+!db.example.sql
+*.sqlite
+*.db
+*dump*
+*backup*
+logs/
